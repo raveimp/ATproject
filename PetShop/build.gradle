@@ -1,0 +1,85 @@
+plugins {
+    id 'java'
+}
+
+version '1.0-SNAPSHOT'
+
+//compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '7.0.0'
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '7.0.0'
+    testImplementation group: 'javax.jms', name: 'jms', version: '1.1'
+    testImplementation group: 'com.ibm.mq', name: 'com.ibm.mq.allclient', version: '9.2.5.0'
+    testImplementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.5.0.0'
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    testImplementation group: 'commons-net', name: 'commons-net', version: '3.8.0'
+    testImplementation group: 'org.xmlunit', name: 'xmlunit-legacy', version: '2.9.0'
+    testImplementation group: 'org.json', name: 'json', version: '20220320'
+    testImplementation group: 'org.apache.httpcomponents', name: 'httpcleint', version: '4.5.13'
+    testImplementation group: 'com.epam.reportportal', name: 'agent-java-cucumber6', version: '5.1.2'
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'json:out.json', '--plugin', 'com.epam.reportportal.cucumber.ScenarioReporter', '--glue', 'packages.steps', 'resources.features', '--tags', Tags]
+            systemProperties System.properties
+        }
+    }
+}
+
+task cucumber_local() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = confugurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'packages.steps', 'resources.features', '--tags', Tags]
+            systemProperties System.properties
+        }
+    }
+}
+
+task getHomeDir {
+    doLast {
+        println gradle.gradleHomDir
+    }
+}
+
+task printSolvedDepsTreeInJson {
+    doLast {
+        def jsonOutput = "["
+        configurations.testImplementation.canBeResolved(true)
+        configurations.testImplementation.resolvedConfiguration.firstLevelModuleDependencies.each { dep ->
+            def addToJson
+            addToJson = { resolvedDep ->
+                jsonOutput += "\n{"
+                jsonOutput += "\"name\":\"${resolvedDep.module.id.group}:${resolvedDep.module.id.name}\",\"version\":\"${resolvedDep.module.id.version}\"},"
+            }
+            addToJson(dep)
+        }
+        if(jsonOutput[-1] == ','){
+            jsonOutput = jsonOutput[0..-2]
+        }
+        jsonOutput += "\n]"
+        println jsonOutput
+
+        project.file("dependencies.json").createNewFile()
+        project.file("dependencies.json").setText(jsonOutput)
+    }
+}
