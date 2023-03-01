@@ -1,5 +1,5 @@
 Feature: Проверка запроса списка питомцев по статусу в магазине
-  @GetAvailablePets
+  @GetAvailablePets @Debug
   Scenario: получение списка доступных в магазине питомцев
     And получаем список питомцев в статусе "available"
       | placeholder | value     |
