@@ -1,4 +1,4 @@
-package packages.exceptions;
+package exceptions;
 public class GeneralException extends RuntimeException {
     public GeneralException(String message) {
         super(message);
@@ -6,7 +6,7 @@ public class GeneralException extends RuntimeException {
     public GeneralException(Throwable cause) {
         super(cause);
     }
-    public GeneralException(String message, String cause) {
+    public GeneralException(String message, Throwable cause) {
         super(message, cause);
     }
 }

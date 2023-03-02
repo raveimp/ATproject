@@ -1,4 +1,4 @@
-package packages.reports;
+package reports;
 
 import io.cucumber.java.Scenario;
 import java.util.HashMap;

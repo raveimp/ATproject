@@ -1,4 +1,4 @@
-package packages.exceptions;
+package exceptions;
 public class AtStringUtilException extends GeneralException {
     public AtStringUtilException(String message) {
         super(message);

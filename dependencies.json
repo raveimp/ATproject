@@ -1,0 +1,14 @@
+[
+{"name":"io.cucumber:cucumber-java","version":"7.0.0"},
+{"name":"io.cucumber:cucumber-junit","version":"7.0.0"},
+{"name":"javax.jms:jms","version":"1.1"},
+{"name":"com.ibm.mq:com.ibm.mq.allclient","version":"9.2.5.0"},
+{"name":"com.oracle.database.jdbc:ojdbc8","version":"21.5.0.0"},
+{"name":"org.apache.commons:commons-lang3","version":"3.12.0"},
+{"name":"commons-io:commons-io","version":"2.11.0"},
+{"name":"commons-net:commons-net","version":"3.8.0"},
+{"name":"org.xmlunit:xmlunit-legacy","version":"2.9.0"},
+{"name":"org.json:json","version":"20220320"},
+{"name":"org.apache.httpcomponents:httpclient","version":"4.5.13"},
+{"name":"com.epam.reportportal:agent-java-cucumber6","version":"5.1.2"}
+]

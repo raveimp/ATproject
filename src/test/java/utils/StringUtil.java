@@ -1,14 +1,15 @@
-package packages.utils;
+package utils;
 
 import java.util.HashMap;
-import packages.exceptions.GeneralException;
-import packages.exceptions.AtStringUtilException;
-import packages.reports.Log;
+import exceptions.GeneralException;
+import exceptions.AtStringUtilException;
+import reports.Log;
+
 public class StringUtil {
     public static final String PREFIX = "#{placeholder_";                                                               //инициализировали переменную начала строки
     public static final String POSTFIX = "}";                                                                           //инициализировали переменную конца строки
     public static String replacePlaceholders(String input, HashMap<String, String> placeholders) {                      //создали метод по замене начала и конца строки
-        //String output = input;                                                                                        //?
+        String output = input;                                                                                        //?
         for (String key : placeholders.keySet()) {                                                                      //получаем набор ключей из HashMap таблиц placeholder и для каждого ключа выполняем:
             String placeholder = PREFIX + key + POSTFIX;                                                                //инициализируем переменную placeholder содержащую строку, например, #{placeholder_status}
             if (output.contains(placeholder)) {                                                                         //если переменная output содержит строку placeholder
@@ -17,7 +18,7 @@ public class StringUtil {
                     value = "";                                                                                         //присваиваем переменной пусто
                 }
                 if (value.contains("GENERATE")) {                                                                       //если значение ключа содержит слово GENERATE
-                    output = output.replace(placeholder, Memory.review(value));                                         //выполняем замену того что в переменной placeholder на новое значение (ссылаемся на метод review в файле Memory.java)
+                    //output = output.replace(placeholder, Memory.review(value));                                         //выполняем замену того что в переменной placeholder на новое значение (ссылаемся на метод review в файле Memory.java)
                 } else {
                     output = output.replace(placeholder, value);                                                        //иначе делаем замену того что в переменной placeholder на новое значение из переменной value
                 }
@@ -28,7 +29,7 @@ public class StringUtil {
         if (output.contains(PREFIX)) {                                                                                  //если переменная output содержит префикс
             int firstIndex = output.indexOf(PREFIX);                                                                    //инициализируем переменную со значением индекса префикса
             int lastIndex = output.indexOf(POSTFIX, firstIndex);                                                        //инициализируем переменную со значением индекса постфикса начиная отчет с индекса префикса
-            String p = output.subsrting(firstIndex, lastIndex + 1);                                                     //определяем переменную, которая содержит подстроку начиная с индекса префикса и заканчивая инфдексом постфикса (+1 т.к. последний индекс не включается). Например, #{placeholder_status} -> status
+            String p = output.substring(firstIndex, lastIndex + 1);                                                     //определяем переменную, которая содержит подстроку начиная с индекса префикса и заканчивая инфдексом постфикса (+1 т.к. последний индекс не включается). Например, #{placeholder_status} -> status
             throw new AtStringUtilException("Some '" + p + "' is present but it should be replaced.");                  //выводим ошибку если замены не произошло
         }
         return output;
@@ -38,7 +39,7 @@ public class StringUtil {
         try {
             body = StringUtil.replacePlaceholders(body, placeholders);
         } catch (AtStringUtilException Ex) {
-            throw new GeneralException(Ex.Message() + " File: " + BodyFilePath);
+            throw new GeneralException(Ex.getMessage() + " File: " + BodyFilePath);
         }
         return body;
     }

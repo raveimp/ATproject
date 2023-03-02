@@ -1,4 +1,4 @@
-package packages.constants;
+package constants;
 
 import java.io.File;
 public class Paths {

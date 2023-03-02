@@ -34,4 +34,4 @@ log
 
 # Specific folders of current project
 build/
-src/resources/logs/*
+src/test/resources/logs/*

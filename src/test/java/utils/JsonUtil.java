@@ -1,4 +1,4 @@
-package packages.utils;
+package utils;
 
 import java.util.HashMap;
 import org.json.JSONObject;
@@ -16,7 +16,7 @@ public class JsonUtil {
                 map.put(key, (String) value);
             }
             else {
-                map.put(key, value.toStrig());
+                map.put(key, (String) value);
             }
         }
         return map;

@@ -1,4 +1,4 @@
-package packages.exceptions;
+package exceptions;
 
 public class AtFileUtilException extends GeneralException {
     public AtFileUtilException(String message) {
