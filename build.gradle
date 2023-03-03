@@ -10,6 +10,13 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
 dependencies {
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '7.0.0'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '7.0.0'
@@ -21,7 +28,7 @@ dependencies {
     testImplementation group: 'commons-net', name: 'commons-net', version: '3.8.0'
     testImplementation group: 'org.xmlunit', name: 'xmlunit-legacy', version: '2.9.0'
     testImplementation group: 'org.json', name: 'json', version: '20220320'
-    testImplementation group: 'org.apache.httpcomponents', name: 'httpcleint', version: '4.5.13'
+    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     testImplementation group: 'com.epam.reportportal', name: 'agent-java-cucumber6', version: '5.1.2'
 }
 
@@ -37,7 +44,7 @@ task cucumber() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'json:out.json', '--plugin', 'com.epam.reportportal.cucumber.ScenarioReporter', '--glue', 'packages.steps', 'resources.features', '--tags', Tags]
+            args = ['--plugin', 'json:out.json', '--plugin', 'com.epam.reportportal.cucumber.ScenarioReporter', '--glue', 'src/test/java/steps', 'src/test/resources/features', '--tags', Tags]
             systemProperties System.properties
         }
     }
@@ -49,7 +56,7 @@ task cucumber_local() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = confugurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--glue', 'packages.steps', 'resources.features', '--tags', Tags]
+            args = ['--plugin', 'pretty', '--glue', 'src/test/java/steps', 'src/test/resources/features', '--tags', Tags]
             systemProperties System.properties
         }
     }
