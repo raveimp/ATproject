@@ -1,0 +1,18 @@
+{
+  "id": "#{placeholder_id}",
+  "category": {
+    "id": 1,
+    "name": "Dundee"
+  },
+  "name": "crocodile",
+  "photoUrls": [
+    "testUrl"
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "Australia"
+    }
+  ],
+  "status": "#{placeholder_status}"
+}

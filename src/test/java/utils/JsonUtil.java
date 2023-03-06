@@ -16,7 +16,7 @@ public class JsonUtil {
         for (String key : jsonObject.keySet()) {
             Object value = jsonObject.get(key);
            // if (value instanceof String) {
-                map.put(key, (String) value);
+            map.put(key, (String) value);
            // }
            // else {
            //     map.put(key, value.toString());

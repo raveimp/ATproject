@@ -19,18 +19,12 @@ Feature: Проверка запроса списка питомцев по ст
 
   @GetAllPets @Debug
   Scenario: получение списка всех питомцев в магазине
-    And получаем список питомцев в статусе "available"
-      | placeholder | value     |
-      | status      | available |
-    And получаем список питомцев в статусе "pending"
-      | placeholder | value   |
-      | status      | pending |
-    And получаем список питомцев в статусе "sold"
-      | placeholder | value |
-      | status      | sold  |
+    And получаем список питомцев в статусе "all"
+      | placeholder | value                    |
+      | status      | available, pending, sold |
 
   @Negative @GetPetsUnknownStatus @Debug
   Scenario: получение списка питомцев в статусе отличном от доступных
-    And получаем список питомцев в статусе "generate"
-      | placeholder | value            |
-      | status      | GENERATE: status |
+    And получаем список питомцев в статусе "unknown"
+      | placeholder | value   |
+      | status      | unknown |

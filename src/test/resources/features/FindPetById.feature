@@ -1,6 +1,6 @@
-Feature: Проверка запроса питомцев по уникальному идентификатору
+Feature: Проверка запроса питомцев по идентификатору
   @GetPetsById @Debug
-  Scenario: получение питомца по уникальному идентификатору
+  Scenario: получение питомца по идентификатору
     And получаем питомца по "id"
-      | placeholder | value        |
-      | status      | GENERATE: id |
+      | placeholder | value     |
+      | id          | SAVED: id |

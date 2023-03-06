@@ -3,7 +3,7 @@ package utils;
 import java.util.HashMap;
 import exceptions.GeneralException;
 import exceptions.AtStringUtilException;
-import substeps.valueGenerator;
+import substeps.ValueGenerator;
 
 public class StringUtil {
 
@@ -20,7 +20,7 @@ public class StringUtil {
                     value = "";                                                                                         //присваиваем переменной пусто
                 }
                 if (value.contains("GENERATE")) {                                                                       //если значение ключа содержит слово GENERATE
-                    output = output.replace(placeholder, valueGenerator.reviewValue(value));                            //выполняем замену того что в переменной placeholder на новое значение (ссылаемся на метод review в файле Memory.java)
+                    output = output.replace(placeholder, ValueGenerator.reviewValue(value));                            //выполняем замену того что в переменной placeholder на новое значение (ссылаемся на метод review в файле Memory.java)
                 } else {
                     output = output.replace(placeholder, value);                                                        //иначе делаем замену того что в переменной placeholder на новое значение из переменной value
                 }
