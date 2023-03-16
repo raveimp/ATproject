@@ -1,10 +1,11 @@
 package steps;
 
+import com.google.common.collect.HashMultimap;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
-
 import java.io.File;
 import java.util.HashMap;
+//import java.util.Map;
 import org.json.JSONObject;
 import constants.Paths;
 import utils.DataTableConvertor;
@@ -38,7 +39,28 @@ public class HttpSteps {
         }
     }
 
-    @And("получаем питомца по {int}")
+    @And("получаем список питомцев в статусе")
+    public void getPetsByAllStatuses(DataTable table) {
+        try{
+            String jsonStr = FileUtil.readFile(
+                    Paths.JSON_PATH + File.separator + "GetPetsByStatus.json"
+            );
+            HashMultimap<String, String> mapDefault = JsonUtil.toArrayMap(new JSONObject(jsonStr));
+            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toArrayMap(table, "placeholder");
+            mapDefault.putAll(mapPlaceholders);
+
+            String jsonRequest = JsonGenerator.getByAllStatuses(petStatus, mapDefault);
+
+            Log.log(jsonRequest);
+
+            HttpExecutor.sendGet(Params.GET_STATUS_PATH, jsonRequest);
+        }
+        catch(Exception Ex) {
+            Log.log(String.valueOf(Ex));
+        }
+    }
+
+    @And("получаем питомца по {string}")
     public void getPetById(String petId, DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
@@ -80,7 +102,7 @@ public class HttpSteps {
         }
     }
 
-    @And("обновляем данные питомца и статус на {string} по {int}")
+    @And("обновляем данные питомца и статус на {string} по {string}")
     public void updatePet(String petStatus, String petId, DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
@@ -101,7 +123,7 @@ public class HttpSteps {
         }
     }
 
-    @And("удаляем данные питомца по {int}")
+    @And("удаляем данные питомца по {string}")
     public void deletePet(String petStatus, String petId, DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
