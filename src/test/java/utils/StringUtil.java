@@ -1,21 +1,22 @@
 package utils;
 
-import java.util.HashMap;
+//import java.util.HashMap;
 import exceptions.GeneralException;
 import exceptions.AtStringUtilException;
 import substeps.ValueGenerator;
+import com.google.common.collect.HashMultimap;
 
 public class StringUtil {
 
     public static final String PREFIX = "#{placeholder_";                                                               //инициализировали переменную начала строки
     public static final String POSTFIX = "}";                                                                           //инициализировали переменную конца строки
 
-    public static String replacePlaceholders(String input, HashMap<String, String> placeholders) {                      //создали метод по замене начала и конца строки
+    public static String replacePlaceholders(String input, HashMultimap<String, String> placeholders) {                      //создали метод по замене начала и конца строки
         String output = input;                                                                                          //?
         for (String key : placeholders.keySet()) {                                                                      //получаем набор ключей из HashMap таблиц placeholder и для каждого ключа выполняем:
             String placeholder = PREFIX + key + POSTFIX;                                                                //инициализируем переменную placeholder содержащую строку, например, #{placeholder_status}
             if (output.contains(placeholder)) {                                                                         //если переменная output содержит строку placeholder
-                String value = placeholders.get(key);                                                                   //инициализируем переменную value и получаем значение ключа из таблиц placeholders
+                String value = placeholders.get(key).toString();                                                                   //инициализируем переменную value и получаем значение ключа из таблиц placeholders
                 if (value.equals("null")) {                                                                             //если значение ключа = null
                     value = "";                                                                                         //присваиваем переменной пусто
                 }
@@ -37,7 +38,7 @@ public class StringUtil {
         return output;
     }
 
-    public static String composeRequest(String BodyFilePath, HashMap<String, String> placeholders) {                    //метод для составления запроса
+    public static String composeRequest(String BodyFilePath, HashMultimap<String, String> placeholders) {                    //метод для составления запроса
         String body = FileUtil.readFile(BodyFilePath);                                                                  //определяем переменную body содержащую тело запроса полученное из файла (ссылка на метод readFile в файле FileUtil.java)
         try {
             body = StringUtil.replacePlaceholders(body, placeholders);

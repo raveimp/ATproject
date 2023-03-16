@@ -18,11 +18,32 @@ import configs.Params;
 
 public class HttpSteps {
 
+    @And("получаем список питомцев в статусе")
+    public void getPetsByStatus(DataTable table) {
+        try{
+            String jsonStr = FileUtil.readFile(
+                    Paths.JSON_PATH + File.separator + "GetPetsByStatus.json"
+            );
+            HashMultimap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+            mapDefault.putAll(mapPlaceholders);
+
+            String jsonRequest = JsonGenerator.getByStatus(mapDefault);
+
+            Log.log(jsonRequest);
+
+            HttpExecutor.sendGet(Params.GET_STATUS_PATH, jsonRequest);
+        }
+        catch(Exception Ex) {
+            Log.log(String.valueOf(Ex));
+        }
+    }
+/**
     @And("получаем список питомцев в статусе {string}")
     public void getPetsByStatus(String petStatus, DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
-                Paths.JSON_PATH + File.separator + "GetPetsByStatus.json"
+                    Paths.JSON_PATH + File.separator + "GetPetsByStatus.json"
             );
             HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
@@ -38,39 +59,18 @@ public class HttpSteps {
             Log.log(String.valueOf(Ex));
         }
     }
-
-    @And("получаем список питомцев в статусе")
-    public void getPetsByAllStatuses(DataTable table) {
-        try{
-            String jsonStr = FileUtil.readFile(
-                    Paths.JSON_PATH + File.separator + "GetPetsByStatus.json"
-            );
-            HashMultimap<String, String> mapDefault = JsonUtil.toArrayMap(new JSONObject(jsonStr));
-            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toArrayMap(table, "placeholder");
-            mapDefault.putAll(mapPlaceholders);
-
-            String jsonRequest = JsonGenerator.getByAllStatuses(petStatus, mapDefault);
-
-            Log.log(jsonRequest);
-
-            HttpExecutor.sendGet(Params.GET_STATUS_PATH, jsonRequest);
-        }
-        catch(Exception Ex) {
-            Log.log(String.valueOf(Ex));
-        }
-    }
-
-    @And("получаем питомца по {string}")
-    public void getPetById(String petId, DataTable table) {
+   */
+    @And("получаем питомца по идентификатору")
+    public void getPetById(DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
                     Paths.JSON_PATH + File.separator + "GetPetById.json"
             );
-            HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+            HashMultimap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
 
-            String jsonRequest = JsonGenerator.getById(petId, mapDefault);
+            String jsonRequest = JsonGenerator.getById(mapDefault);
 
             Log.log(jsonRequest);
 
@@ -81,17 +81,17 @@ public class HttpSteps {
         }
     }
 
-    @And("добавляем нового питомца в статусе {string}")
-    public void addNewPet(String petStatus, String petId, DataTable table) {
+    @And("добавляем нового питомца")
+    public void addNewPet(String petId, DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
                     Paths.JSON_PATH + File.separator + "AddNewPet.json"
             );
-            HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+            HashMultimap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
 
-            String jsonRequest = JsonGenerator.addNew(petStatus, petId, mapDefault);
+            String jsonRequest = JsonGenerator.addNew(mapDefault);
 
             Log.log(jsonRequest);
 
@@ -102,17 +102,17 @@ public class HttpSteps {
         }
     }
 
-    @And("обновляем данные питомца и статус на {string} по {string}")
-    public void updatePet(String petStatus, String petId, DataTable table) {
+    @And("обновляем данные питомца и статус")
+    public void updatePet(DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
                     Paths.JSON_PATH + File.separator + "UpdatePet.json"
             );
-            HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+            HashMultimap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
 
-            String jsonRequest = JsonGenerator.updRecord(petStatus, petId, mapDefault);
+            String jsonRequest = JsonGenerator.updRecord(mapDefault);
 
             Log.log(jsonRequest);
 
@@ -123,17 +123,17 @@ public class HttpSteps {
         }
     }
 
-    @And("удаляем данные питомца по {string}")
-    public void deletePet(String petStatus, String petId, DataTable table) {
+    @And("удаляем данные питомца")
+    public void deletePet(DataTable table) {
         try{
             String jsonStr = FileUtil.readFile(
                     Paths.JSON_PATH + File.separator + "DeletePetById.json"
             );
-            HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+            HashMultimap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+            HashMultimap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
 
-            String jsonRequest = JsonGenerator.delById(petId, mapDefault);
+            String jsonRequest = JsonGenerator.delById(mapDefault);
 
             Log.log(jsonRequest);
 

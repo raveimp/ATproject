@@ -47,4 +47,8 @@ public class ValueGenerator {
         PetId = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "Input.txt");
         return PetId;
     }
+
+    public static void clear() {
+        map.clear();
+    }
 }

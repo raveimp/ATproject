@@ -1,13 +1,13 @@
 package utils;
 
-import java.util.HashMap;
+//import java.util.HashMap;
 //import java.util.Map;
 import com.google.common.collect.HashMultimap;
 import org.json.JSONObject;
 
 public class JsonUtil {
 
-    public static HashMultimap<String, String> toArrayMap(JSONObject jsonObject) {
+    public static HashMultimap<String, String> toHashMap(JSONObject jsonObject) {
         HashMultimap<String, String> statusMap = new HashMultimap<>();
         for (String key : jsonObject.keySet()) {
             Object value = jsonObject.get(key);
@@ -21,7 +21,7 @@ public class JsonUtil {
         HashMap<String, Object> map = (HashMap<String, Object>) jsonObj.toMap();
         return map;
     }
-*/
+
     public static HashMap<String, String> toHashMap(JSONObject jsonObject) {
         HashMap<String, String> map = new HashMap<>();
         for (String key : jsonObject.keySet()) {
@@ -35,4 +35,5 @@ public class JsonUtil {
         }
         return map;
     }
+ */
 }
