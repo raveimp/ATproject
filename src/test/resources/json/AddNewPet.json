@@ -2,9 +2,9 @@
   "id": "#{placeholder_id}",
   "category": {
     "id": 1,
-    "name": "Dundee"
+    "name": "crocodile"
   },
-  "name": "crocodile",
+  "name": "Dundee",
   "photoUrls": [
     "testUrl"
   ],

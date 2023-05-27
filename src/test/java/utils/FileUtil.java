@@ -10,25 +10,25 @@ import org.apache.commons.io.FileUtils;
 
 public class FileUtil {
 
-    public static String readFile(String path) {                                                                        //создаем метод readFile для чтения из файла
-        File file = new File(path);                                                                                     //создаем объект File
-        String reader = null;                                                                                           //создаем пустую строковую переменную куда будут записаны данные из файла
+    public static String readFile(String path) {
+        File file = new File(path);
+        String reader;
         try {
-            reader = FileUtils.readFileToString(file, "UTF-8");                                              //считываем данные из файла, переводим в строку и записываем в переменную reader
+            reader = FileUtils.readFileToString(file, "UTF-8");
         }
         catch (IOException Ex) {
-            throw new GeneralException(Ex);                                                                              //ловим исключения
+            throw new GeneralException(Ex);
         }
-        return reader;                                                                                                   //возвращаем содержимое переменной
+        return reader;
     }
 
-    public static void writeFile(String path, String content) {                                                          //создаем метод writeFile для записи в файл
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8)) {   //создаем переменную класса OutputStreamWriter для конвертирования символов в байты и записи в файл?
-            writer.write(content);                                                                                       //записываем в переменную данные
-            writer.flush();                                                                                              //очищаем поток
+    public static void writeFile(String path, String content) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8)) {
+            writer.write(content);
+            writer.flush();
         }
         catch (IOException Ex) {
-            throw new GeneralException(Ex);                                                                              //ловим исключения
+            throw new GeneralException(Ex);
         }
     }
 }

@@ -1,45 +1,66 @@
 package utils;
 
-//import java.util.HashMap;
+import java.util.HashMap;
 import exceptions.GeneralException;
 import exceptions.AtStringUtilException;
 import substeps.ValueGenerator;
-import com.google.common.collect.HashMultimap;
 
 public class StringUtil {
+    public static final String PREFIX = "#{placeholder_";
+    public static final String POSTFIX = "}";
 
-    public static final String PREFIX = "#{placeholder_";                                                               //инициализировали переменную начала строки
-    public static final String POSTFIX = "}";                                                                           //инициализировали переменную конца строки
-
-    public static String replacePlaceholders(String input, HashMultimap<String, String> placeholders) {                      //создали метод по замене начала и конца строки
-        String output = input;                                                                                          //?
-        for (String key : placeholders.keySet()) {                                                                      //получаем набор ключей из HashMap таблиц placeholder и для каждого ключа выполняем:
-            String placeholder = PREFIX + key + POSTFIX;                                                                //инициализируем переменную placeholder содержащую строку, например, #{placeholder_status}
-            if (output.contains(placeholder)) {                                                                         //если переменная output содержит строку placeholder
-                String value = placeholders.get(key).toString();                                                                   //инициализируем переменную value и получаем значение ключа из таблиц placeholders
-                if (value.equals("null")) {                                                                             //если значение ключа = null
-                    value = "";                                                                                         //присваиваем переменной пусто
+    public static String replacePlaceholders(String input, HashMap<String, String> placeholders) {
+        String output = input;
+        String value;
+        for (String key : placeholders.keySet()) {
+            String placeholder = PREFIX + key + POSTFIX;
+            if (input.contains(placeholder)) {
+                value = placeholders.get(key);
+                if (value.equals("null")) {
+                    value = "";
                 }
-                if (value.contains("GENERATE")) {                                                                       //если значение ключа содержит слово GENERATE
-                    output = output.replace(placeholder, ValueGenerator.reviewValue(value));                            //выполняем замену того что в переменной placeholder на новое значение (ссылаемся на метод review в файле Memory.java)
-                } else {
-                    output = output.replace(placeholder, value);                                                        //иначе делаем замену того что в переменной placeholder на новое значение из переменной value
+                output = output.replace(placeholder, value);
+                if (value.contains("GENERATE") || value.contains("SAVED") || value.contains("EXIST")) {
+                    String temp = ValueGenerator.reviewValue(value);
+                    output = output.replace(value, temp);
+                 } else {
+                    output = output.replace(placeholder, value);
                 }
-            } else {
-                throw new AtStringUtilException("'" + placeholder + "' is absent.");                                    //выводим ошибку в случае если строка отсутствует
             }
         }
-        if (output.contains(PREFIX)) {                                                                                  //если переменная output содержит префикс
-            int firstIndex = output.indexOf(PREFIX);                                                                    //инициализируем переменную со значением индекса префикса
-            int lastIndex = output.indexOf(POSTFIX, firstIndex);                                                        //инициализируем переменную со значением индекса постфикса начиная отчет с индекса префикса
-            String p = output.substring(firstIndex, lastIndex + 1);                                                     //определяем переменную, которая содержит подстроку начиная с индекса префикса и заканчивая инфдексом постфикса (+1 т.к. последний индекс не включается). Например, #{placeholder_status} -> status
-            throw new AtStringUtilException("Some '" + p + "' is present but it should be replaced.");                  //выводим ошибку если замены не произошло
+        if (output != null && output.contains(PREFIX)) {
+            int firstIndex = output.indexOf(PREFIX);
+            int lastIndex = output.indexOf(POSTFIX, firstIndex);
+            String p = output.substring(firstIndex, lastIndex + 1);
+            throw new AtStringUtilException("Some '" + p + "' is present but it should be replaced.");
         }
         return output;
     }
 
-    public static String composeRequest(String BodyFilePath, HashMultimap<String, String> placeholders) {                    //метод для составления запроса
-        String body = FileUtil.readFile(BodyFilePath);                                                                  //определяем переменную body содержащую тело запроса полученное из файла (ссылка на метод readFile в файле FileUtil.java)
+    public static String replacePlaceholdersForCurl(HashMap<String, String> placeholders) {
+        String output = placeholders.values().toString();
+        output = output.substring(output.indexOf('[') + 1, output.indexOf(']'));
+        for (String key : placeholders.keySet()) {
+            if (output.contains(key)) {
+                String value = placeholders.get(key);
+                if (value.equals("null")) {
+                    value = "";
+                }
+                if (value.contains("GENERATE") || value.contains("SAVED") || value.contains("EXIST") || value.contains("ALTERED")) {
+                    String temp = ValueGenerator.reviewValue(value);
+                    output = output.replace(value, temp);
+                } else {
+                    output = output.replace(key, value);
+                }
+            } else {
+                throw new AtStringUtilException("'" + key + "' is absent.");
+            }
+        }
+        return output;
+    }
+
+    public static String composeRequest(String BodyFilePath, HashMap<String, String> placeholders) {
+        String body = FileUtil.readFile(BodyFilePath);
         try {
             body = StringUtil.replacePlaceholders(body, placeholders);
         } catch (AtStringUtilException Ex) {
