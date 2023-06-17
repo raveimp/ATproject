@@ -5,11 +5,10 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import exceptions.GeneralException;
+import exceptions.AtFileUtilException;
 import org.apache.commons.io.FileUtils;
 
 public class FileUtil {
-
     public static String readFile(String path) {
         File file = new File(path);
         String reader;
@@ -17,7 +16,7 @@ public class FileUtil {
             reader = FileUtils.readFileToString(file, "UTF-8");
         }
         catch (IOException Ex) {
-            throw new GeneralException(Ex);
+            throw new AtFileUtilException(Ex);
         }
         return reader;
     }
@@ -28,7 +27,7 @@ public class FileUtil {
             writer.flush();
         }
         catch (IOException Ex) {
-            throw new GeneralException(Ex);
+            throw new AtFileUtilException(Ex);
         }
     }
 }

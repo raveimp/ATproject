@@ -1,5 +1,8 @@
+# encoding: UTF-8
+# language: en
+
 Feature: Удаление существующего питомца
-  @DeleteExistPet @Debug
+  @DeleteExistPet @All
   Scenario: удаление данных существующего питомца и проверка результата
     And получаем список питомцев в статусе "available, pending, sold"
     And удаляем данные питомца

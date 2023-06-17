@@ -1,5 +1,8 @@
+# encoding: UTF-8
+# language: en
+
 Feature: Добавление и удаление питомца
-  @DeletePet @Debug
+  @DeletePet @All
   Scenario: добавление нового питомца в магазин, удаление данных питомца и проверка результата
     And добавляем нового питомца
       | placeholder | value        |

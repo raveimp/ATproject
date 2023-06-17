@@ -4,7 +4,7 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import reports.Log;
-import substeps.ValueGenerator;
+import stepshelpers.ValueGenerator;
 
 public class CucumberHooks {
     @Before

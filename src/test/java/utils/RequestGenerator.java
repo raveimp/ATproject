@@ -6,7 +6,6 @@ import java.util.HashMap;
 import com.google.common.collect.Iterables;
 import configs.Params;
 import constants.Paths;
-
 import static utils.StringUtil.composeRequest;
 
 public class RequestGenerator {

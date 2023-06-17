@@ -1,5 +1,9 @@
 package steps;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import exceptions.HttpStepsException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import java.io.File;
@@ -8,13 +12,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import org.json.JSONObject;
 import constants.Paths;
-import utils.DataTableConvertor;
-import utils.FileUtil;
-import utils.JsonUtil;
-import utils.RequestGenerator;
-import reports.Log;
-import substeps.RequestExecutor;
 import configs.Params;
+import utils.*;
+import reports.Log;
+import stepshelpers.RequestExecutor;
+
+import static org.junit.Assert.assertTrue;
 
 public class HttpSteps {
 
@@ -27,7 +30,7 @@ public class HttpSteps {
             RequestExecutor.sendGet(curlRequest);
         }
         catch(Exception Ex) {
-            Log.log(String.valueOf(Ex));
+            throw new HttpStepsException(Ex);
         }
     }
 
@@ -39,57 +42,53 @@ public class HttpSteps {
             RequestExecutor.sendGet(curlRequest);
         }
         catch(Exception Ex) {
-            Log.log(String.valueOf(Ex));
+            throw new HttpStepsException(Ex);
         }
     }
 
     @And("добавляем нового питомца")
     public void addNewPet(DataTable table) {
-        try{
             String jsonStr = FileUtil.readFile(Paths.JSON_PATH + File.separator + "AddNewPet.json");
             HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
-
             String jsonRequest = RequestGenerator.addNew(mapDefault);
-
+            FileUtil.writeFile(Paths.INPUT_PATH + File.separator + "ReqContent.txt", String.valueOf(jsonRequest));
             Log.log("Request body:" + "\n" + jsonRequest);
-
             RequestExecutor.sendPost(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
-        }
-        catch(Exception Ex) {
-            Log.log(String.valueOf(Ex));
-        }
     }
 
     @And("обновляем данные питомца и статус")
     public void updatePet(DataTable table) {
-        try{
             String jsonStr = FileUtil.readFile(Paths.JSON_PATH + File.separator + "UpdatePet.json");
             HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
-
             String jsonRequest = RequestGenerator.updRecord(mapDefault);
-
+            FileUtil.writeFile(Paths.INPUT_PATH + File.separator + "ReqContent.txt", String.valueOf(jsonRequest));
             Log.log("Request body:" + "\n" + jsonRequest);
-
             RequestExecutor.sendPut(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
-        }
-        catch(Exception Ex) {
-            Log.log(String.valueOf(Ex));
-        }
     }
 
     @And("удаляем данные питомца")
     public void deletePet(DataTable table) {
-        try{
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             String curlRequest = RequestGenerator.delById(mapPlaceholders);
             RequestExecutor.sendDelete(curlRequest);
-        }
-        catch(Exception Ex) {
-            Log.log(String.valueOf(Ex));
+    }
+
+    @And("проверяем результат")
+    public void comparator() {
+            String readReq = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "ReqContent.txt");
+            String readResp = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "RespContent.txt");
+            ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode first = mapper.readTree(readReq);
+            JsonNode second = mapper.readTree(readResp);
+            StringUtil.NodeComparator cmp = new StringUtil.NodeComparator();
+            assertTrue(first.equals(cmp, second));
+        } catch (JsonProcessingException Ex) {
+            throw new HttpStepsException(Ex);
         }
     }
 }
