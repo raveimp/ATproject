@@ -1,11 +1,10 @@
 package stepshelpers;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import constants.Paths;
+import java.util.Random;
+import configs.Params;
 import org.json.JSONObject;
-import utils.FileUtil;
 
 public class ValueGenerator {
     private static final String Word1 = "GENERATE: ";
@@ -14,8 +13,6 @@ public class ValueGenerator {
     private static final int Word2_space_index = 7;
     private static final String Word3 = "EXIST: ";
     private static final int Word3_space_index = 7;
-    private static final String Word4 = "ALTERED: ";
-    private static final int Word4_space_index = 9;
     private static final Map<String, String> map = new HashMap<>();
 
     public static String reviewValue(String value) {
@@ -28,16 +25,11 @@ public class ValueGenerator {
         if (value.startsWith(Word3)){
             return defineExistValue(value.substring(Word3_space_index));
         }
-        if (value.startsWith(Word4)){
-            return defineAlteredValue(value.substring(Word4_space_index));
-        }
         return value;
     }
 
     private static String defineGenerateValue(String PetId) {
-        String readId = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "Input.txt");
-        PetId = readId;
-        String value = String.valueOf(generatePetId(Long.valueOf(PetId)));
+        String value = generatePetId(PetId);
         map.put(PetId, value);
         return value;
     }
@@ -54,33 +46,26 @@ public class ValueGenerator {
         return value;
     }
 
-    private static String defineAlteredValue(String PetId) {
-        String value = alteredPetId(PetId);
-        map.put(PetId, value);
-        return value;
-    }
-
-    private static Long generatePetId(Long PetId) {
-        PetId++;
-        FileUtil.writeFile(Paths.INPUT_PATH + File.separator + "Input.txt", String.valueOf(PetId));
+    private static String generatePetId(String PetId) {
+        Random random = new Random();
+        PetId = String.valueOf(random.nextInt(100000));
         return PetId;
     }
 
     private static String savedPetId(String PetId) {
-        PetId = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "Input.txt");
-        return PetId;
+        if (map.containsKey(PetId)) {
+         return map.get(PetId);
+        } else {
+            RequestExecutor.sendGet(Params.HTTP_PROTOCOL + "://" + Params.HTTP_HOST + Params.GET_STATUS_PATH + "?status=available");
+            return existPetId(PetId);
+        }
     }
 
     private static String existPetId(String PetId) {
-        String temp = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "RespContent.txt");
+        String temp = Memory.get();
         JSONObject obj = new JSONParser().parse(temp);
         PetId = String.valueOf(obj.get("id"));
-        FileUtil.writeFile(Paths.INPUT_PATH + File.separator + "AlteredId.txt", PetId);
-        return PetId;
-    }
-
-    private static String alteredPetId(String PetId) {
-        PetId = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "AlteredId.txt");
+        map.put(PetId, String.valueOf(obj));
         return PetId;
     }
 

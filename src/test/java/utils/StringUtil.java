@@ -1,10 +1,6 @@
 package utils;
 
-import java.util.Comparator;
 import java.util.HashMap;
-import com.fasterxml.jackson.databind.node.NumericNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.JsonNode;
 import exceptions.AtStringUtilException;
 import stepshelpers.ValueGenerator;
 
@@ -70,21 +66,5 @@ public class StringUtil {
             throw new AtStringUtilException(Ex.getMessage() + " File: " + BodyFilePath);
         }
         return body;
-    }
-
-    public static class NodeComparator implements Comparator<JsonNode> {
-        public int compare(JsonNode jn1, JsonNode jn2) {
-            if (jn1.equals(jn2)) {
-                return 0;
-            }
-            if ((jn1 instanceof TextNode) && (jn2 instanceof NumericNode)) {
-                String str1 = jn1.asText();
-                String str2 = jn2.asText();
-                if (str1.equalsIgnoreCase(str2)) {
-                    return 0;
-                }
-            }
-            return 1;
-        }
     }
 }

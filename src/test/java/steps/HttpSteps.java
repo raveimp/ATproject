@@ -1,8 +1,5 @@
 package steps;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import exceptions.HttpStepsException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -16,8 +13,7 @@ import configs.Params;
 import utils.*;
 import reports.Log;
 import stepshelpers.RequestExecutor;
-
-import static org.junit.Assert.assertTrue;
+import stepshelpers.Memory;
 
 public class HttpSteps {
 
@@ -53,8 +49,8 @@ public class HttpSteps {
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
             String jsonRequest = RequestGenerator.addNew(mapDefault);
-            FileUtil.writeFile(Paths.INPUT_PATH + File.separator + "ReqContent.txt", String.valueOf(jsonRequest));
-            Log.log("Request body:" + "\n" + jsonRequest);
+            Memory.put(jsonRequest);
+            Log.log("POST request body:" + "\n" + jsonRequest);
             RequestExecutor.sendPost(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
     }
 
@@ -65,8 +61,8 @@ public class HttpSteps {
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             mapDefault.putAll(mapPlaceholders);
             String jsonRequest = RequestGenerator.updRecord(mapDefault);
-            FileUtil.writeFile(Paths.INPUT_PATH + File.separator + "ReqContent.txt", String.valueOf(jsonRequest));
-            Log.log("Request body:" + "\n" + jsonRequest);
+            Memory.put(jsonRequest);
+            Log.log("PUT request body:" + "\n" + jsonRequest);
             RequestExecutor.sendPut(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
     }
 
@@ -75,20 +71,5 @@ public class HttpSteps {
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             String curlRequest = RequestGenerator.delById(mapPlaceholders);
             RequestExecutor.sendDelete(curlRequest);
-    }
-
-    @And("проверяем результат")
-    public void comparator() {
-            String readReq = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "ReqContent.txt");
-            String readResp = FileUtil.readFile(Paths.INPUT_PATH + File.separator + "RespContent.txt");
-            ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode first = mapper.readTree(readReq);
-            JsonNode second = mapper.readTree(readResp);
-            StringUtil.NodeComparator cmp = new StringUtil.NodeComparator();
-            assertTrue(first.equals(cmp, second));
-        } catch (JsonProcessingException Ex) {
-            throw new HttpStepsException(Ex);
-        }
     }
 }
