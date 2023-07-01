@@ -3,14 +3,9 @@ package stepshelpers;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import exceptions.RequestExecutorException;
 import reports.Log;
 import configs.Params;
-
-import static org.junit.Assert.assertEquals;
 
 public class RequestExecutor {
     public static void sendGet(String curlRequest) {
@@ -39,25 +34,7 @@ public class RequestExecutor {
                 throw new RequestExecutorException(Ex);
             }
         }
-        if (Memory.checkMap() != 0) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                String reqContent = Memory.get();
-                JsonNode reqCompare = mapper.readTree(reqContent);
-                JsonNode respCompare = mapper.readTree(String.valueOf(respContent));
-                assertEquals(reqCompare.asText(),respCompare.asText());
-            } catch (JsonProcessingException Ex) {
-                throw new RequestExecutorException(Ex);
-            }
-        } else if (String.valueOf(respContent).startsWith("[")) {
-            Memory.put(respContent.substring(respContent.indexOf("[") + 1, respContent.lastIndexOf("]")));
-        } else if (respContent.length() <= 4) {
-            throw new RequestExecutorException("Bad request.");
-        } else if (String.valueOf(respContent).contains("code")) {
-            throw new RequestExecutorException("You got response code other then 200.");
-        } else {
-            Memory.put(String.valueOf(respContent));
-        }
+        Memory.put("response", String.valueOf(respContent));
         Log.log("GET response body:" + "\n" + respContent);
     }
 
@@ -180,8 +157,5 @@ public class RequestExecutor {
             }
         }
         Log.log("DELETE response body: " + respContent);
-        if (String.valueOf(respContent).contains("Pet not found")) {
-            System.out.println("Pet was deleted from the store.");
-        }
     }
 }

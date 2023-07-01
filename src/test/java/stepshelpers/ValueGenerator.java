@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import configs.Params;
+import exceptions.ValueGeneratorException;
 import org.json.JSONObject;
 
 public class ValueGenerator {
@@ -62,7 +63,12 @@ public class ValueGenerator {
     }
 
     private static String existPetId(String PetId) {
-        String temp = Memory.get();
+        String temp = Memory.get("response");
+        if (temp.startsWith("[")) {
+            temp = temp.substring(temp.indexOf("[") + 1, temp.lastIndexOf("]"));
+        } else if (temp.equals("null")) {
+            throw new ValueGeneratorException("Bad request.");
+        }
         JSONObject obj = new JSONParser().parse(temp);
         PetId = String.valueOf(obj.get("id"));
         map.put(PetId, String.valueOf(obj));
