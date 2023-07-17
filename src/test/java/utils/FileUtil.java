@@ -1,10 +1,7 @@
 package utils;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import exceptions.AtFileUtilException;
 import org.apache.commons.io.FileUtils;
 
@@ -19,15 +16,5 @@ public class FileUtil {
             throw new AtFileUtilException(Ex);
         }
         return reader;
-    }
-
-    public static void writeFile(String path, String content) {
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8)) {
-            writer.write(content);
-            writer.flush();
-        }
-        catch (IOException Ex) {
-            throw new AtFileUtilException(Ex);
-        }
     }
 }

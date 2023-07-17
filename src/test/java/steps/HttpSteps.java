@@ -13,6 +13,7 @@ import java.util.HashMap;
 import org.json.JSONObject;
 import constants.Paths;
 import configs.Params;
+import stepshelpers.RequestGenerator;
 import utils.*;
 import reports.Log;
 import stepshelpers.RequestExecutor;
@@ -22,30 +23,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class HttpSteps {
-
     @And("получаем список питомцев в статусе {string}")
     public void getPetsByStatus(String statuses) {
-        try{
             String[] temp = statuses.split(", ");
             ArrayList<String> statusList = new ArrayList<>(Arrays.asList(temp));
             String curlRequest = RequestGenerator.getByStatus(statusList);
             RequestExecutor.sendGet(curlRequest);
-        }
-        catch(Exception Ex) {
-            throw new HttpStepsException(Ex);
-        }
     }
 
     @And("получаем питомца по идентификатору")
     public void getPetById(DataTable table) {
-        try{
             HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
             String curlRequest = RequestGenerator.getById(mapPlaceholders);
             RequestExecutor.sendGet(curlRequest);
-        }
-        catch(Exception Ex) {
-            throw new HttpStepsException(Ex);
-        }
     }
 
     @And("добавляем нового питомца")

@@ -1,4 +1,4 @@
-package utils;
+package stepshelpers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,11 +6,13 @@ import java.util.HashMap;
 import com.google.common.collect.Iterables;
 import configs.Params;
 import constants.Paths;
+import utils.StringUtil;
+
 import static utils.StringUtil.composeRequest;
 
 public class RequestGenerator {
     public static String getByStatus(ArrayList<String> statusList) {
-        final String[] newRequest = {""};
+        final String[] newRequest = {""};  //нужно для лямбда-выражения
         newRequest[0] = Params.HTTP_PROTOCOL + "://" + Params.HTTP_HOST + Params.GET_STATUS_PATH + "?";
         statusList.forEach(s -> {
             if (s.equals(Iterables.getLast(statusList))) {
