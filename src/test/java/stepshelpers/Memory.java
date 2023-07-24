@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Memory {
+
     private static final Map<String, String> map = new HashMap<>();
 
     public static void put(String key, String value) {

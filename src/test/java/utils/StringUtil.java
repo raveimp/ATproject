@@ -5,6 +5,7 @@ import exceptions.AtStringUtilException;
 import stepshelpers.ValueGenerator;
 
 public class StringUtil {
+
     public static final String PREFIX = "#{placeholder_";
     public static final String POSTFIX = "}";
 

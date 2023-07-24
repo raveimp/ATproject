@@ -4,6 +4,7 @@ import java.util.HashMap;
 import org.json.JSONObject;
 
 public class JsonUtil {
+
     public static HashMap<String, String> toHashMap(JSONObject jsonObject) {
         HashMap<String, String> map = new HashMap<>();
         for (String key : jsonObject.keySet()) {

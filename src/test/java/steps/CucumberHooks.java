@@ -7,6 +7,7 @@ import reports.Log;
 import stepshelpers.ValueGenerator;
 
 public class CucumberHooks {
+
     @Before
     public void before(Scenario scenario) {
         Log.setScenario(scenario);

@@ -8,6 +8,7 @@ import reports.Log;
 import configs.Params;
 
 public class RequestExecutor {
+
     public static void sendGet(String curlRequest) {
         Process execute;
         BufferedReader resp;

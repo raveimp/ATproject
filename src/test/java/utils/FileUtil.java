@@ -6,6 +6,7 @@ import exceptions.AtFileUtilException;
 import org.apache.commons.io.FileUtils;
 
 public class FileUtil {
+
     public static String readFile(String path) {
         File file = new File(path);
         String reader;

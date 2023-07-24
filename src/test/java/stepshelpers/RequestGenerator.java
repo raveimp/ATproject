@@ -10,6 +10,7 @@ import utils.StringUtil;
 import static utils.StringUtil.composeRequest;
 
 public class RequestGenerator {
+
     public static String getByStatus(ArrayList<String> statusList) {
         String newRequest = Params.HTTP_PROTOCOL + "://" + Params.HTTP_HOST + Params.GET_STATUS_PATH + "?";
         for(String currentStatus : statusList) {

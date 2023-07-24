@@ -8,6 +8,7 @@ import exceptions.ValueGeneratorException;
 import org.json.JSONObject;
 
 public class ValueGenerator {
+
     private static final String Word1 = "GENERATE: ";
     private static final int Word1_space_index = 10;
     private static final String Word2 = "SAVED: ";
