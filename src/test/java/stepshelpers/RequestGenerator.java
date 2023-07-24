@@ -3,7 +3,6 @@ package stepshelpers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.google.common.collect.Iterables;
 import configs.Params;
 import constants.Paths;
 import utils.StringUtil;
@@ -12,19 +11,12 @@ import static utils.StringUtil.composeRequest;
 
 public class RequestGenerator {
     public static String getByStatus(ArrayList<String> statusList) {
-        final String[] newRequest = {""};  //нужно для лямбда-выражения
-        newRequest[0] = Params.HTTP_PROTOCOL + "://" + Params.HTTP_HOST + Params.GET_STATUS_PATH + "?";
-        statusList.forEach(s -> {
-            if (s.equals(Iterables.getLast(statusList))) {
-                String status = "status=" + s;
-                newRequest[0] += status;
-            }
-            else {
-                    String status = "status=" + s;
-                    newRequest[0] += status + "&";
-                }
-            });
-        return newRequest[0];
+        String newRequest = Params.HTTP_PROTOCOL + "://" + Params.HTTP_HOST + Params.GET_STATUS_PATH + "?";
+        for(String currentStatus : statusList) {
+            newRequest += "status=" + currentStatus + "&";
+        }
+        newRequest = newRequest.substring(0, newRequest.length() - 1);
+        return newRequest;
     }
 
     public static String getById(HashMap<String, String> mapPlaceholders) {

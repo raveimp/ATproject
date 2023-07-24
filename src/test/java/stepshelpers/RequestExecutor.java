@@ -26,13 +26,12 @@ public class RequestExecutor {
             respContent.append(respLine);
         } catch (IOException Ex) {
             throw new RequestExecutorException(Ex);
-        } finally {
-            try {
-                resp.close();
-                execute.destroy();
-            } catch (IOException Ex) {
-                throw new RequestExecutorException(Ex);
-            }
+        }
+        try {
+            resp.close();
+            execute.destroy();
+        } catch (IOException Ex) {
+            throw new RequestExecutorException(Ex);
         }
         Memory.put("response", String.valueOf(respContent));
         Log.log("GET response body:" + "\n" + respContent);
@@ -72,14 +71,13 @@ public class RequestExecutor {
             respContent.append(respLine);
         } catch (IOException Ex) {
                 throw new RequestExecutorException(Ex);
-        } finally {
-            try {
-                req.flush();
-                req.close();
-                resp.close();
-            } catch (IOException Ex) {
-                throw new RequestExecutorException(Ex);
-            }
+        }
+        try {
+            req.flush();
+            req.close();
+            resp.close();
+        } catch (IOException Ex) {
+            throw new RequestExecutorException(Ex);
         }
         Log.log("POST response code: " + responseCode + "\n" + "POST response body:" + "\n" + respContent);
     }
@@ -118,14 +116,13 @@ public class RequestExecutor {
             respContent.append(respLine);
             } catch (IOException Ex) {
                 throw new RequestExecutorException(Ex);
-            } finally {
-                try {
-                    req.flush();
-                    req.close();
-                    resp.close();
-                } catch (IOException Ex) {
-                    throw new RequestExecutorException(Ex);
-                }
+            }
+            try {
+                req.flush();
+                req.close();
+                resp.close();
+            } catch (IOException Ex) {
+                throw new RequestExecutorException(Ex);
             }
         Log.log("PUT response code: " + responseCode + "\n" + "PUT response body:" + "\n" + respContent);
     }
@@ -148,13 +145,12 @@ public class RequestExecutor {
             respContent.append(respLine);
         } catch (IOException Ex) {
             throw new RequestExecutorException(Ex);
-        } finally {
-            try {
-                execute.destroy();
-                resp.close();
-            } catch (IOException Ex) {
-                throw new RequestExecutorException(Ex);
-            }
+        }
+        try {
+            execute.destroy();
+            resp.close();
+        } catch (IOException Ex) {
+            throw new RequestExecutorException(Ex);
         }
         Log.log("DELETE response body: " + respContent);
     }
