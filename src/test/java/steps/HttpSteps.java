@@ -13,14 +13,12 @@ import java.util.HashMap;
 import org.json.JSONObject;
 import constants.Paths;
 import configs.Params;
+import org.junit.Assert;
 import stepshelpers.RequestGenerator;
 import utils.*;
 import reports.Log;
 import stepshelpers.RequestExecutor;
 import stepshelpers.Memory;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class HttpSteps {
 
@@ -83,7 +81,7 @@ public class HttpSteps {
         } catch (JsonProcessingException Ex) {
             throw new HttpStepsException(Ex);
         }
-        assertEquals(reqCompare.asText(), respCompare.asText());
+        Assert.assertEquals(reqCompare.asText(), respCompare.asText());
     }
 
     @And("проверяем результат запроса")
@@ -111,6 +109,6 @@ public class HttpSteps {
     @And("проверяем результат удаления")
     public void checkDelete() {
         String respContent = Memory.get("response");
-        assertTrue(respContent, String.valueOf(respContent).contains("Pet not found"));
+        Assert.assertTrue(respContent, String.valueOf(respContent).contains("Pet not found"));
     }
 }

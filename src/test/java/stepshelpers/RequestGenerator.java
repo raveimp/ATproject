@@ -7,8 +7,6 @@ import configs.Params;
 import constants.Paths;
 import utils.StringUtil;
 
-import static utils.StringUtil.composeRequest;
-
 public class RequestGenerator {
 
     public static String getByStatus(ArrayList<String> statusList) {
@@ -28,11 +26,11 @@ public class RequestGenerator {
     }
 
     public static String addNew(HashMap<String, String> mapPlaceholders) {
-        return composeRequest(Paths.JSON_PATH + File.separator + "AddNewPet.json", mapPlaceholders);
+        return StringUtil.composeRequest(Paths.JSON_PATH + File.separator + "AddNewPet.json", mapPlaceholders);
     }
 
     public static String updRecord(HashMap<String, String> mapPlaceholders) {
-        return composeRequest(Paths.JSON_PATH + File.separator + "UpdatePet.json", mapPlaceholders);
+        return StringUtil.composeRequest(Paths.JSON_PATH + File.separator + "UpdatePet.json", mapPlaceholders);
     }
 
     public static String delById(HashMap<String, String> mapPlaceholders) {
