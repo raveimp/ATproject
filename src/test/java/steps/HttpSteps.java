@@ -7,65 +7,62 @@ import exceptions.HttpStepsException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import constants.Paths;
 import configs.Params;
 import org.junit.Assert;
-import stepshelpers.RequestGenerator;
+import stepshelpers.*;
 import utils.*;
 import reports.Log;
-import stepshelpers.RequestExecutor;
-import stepshelpers.Memory;
 
 public class HttpSteps {
 
     @And("получаем список питомцев в статусе {string}")
     public void getPetsByStatus(String statuses) {
-            String[] temp = statuses.split(", ");
-            ArrayList<String> statusList = new ArrayList<>(Arrays.asList(temp));
-            String curlRequest = RequestGenerator.getByStatus(statusList);
-            RequestExecutor.sendGet(curlRequest);
+        String[] temp = statuses.split(", ");
+        ArrayList<String> statusList = new ArrayList<>(Arrays.asList(temp));
+        String curlRequest = RequestGenerator.getByStatus(statusList);
+        RequestExecutor.sendGet(curlRequest);
     }
 
     @And("получаем питомца по идентификатору")
     public void getPetById(DataTable table) {
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
-            String curlRequest = RequestGenerator.getById(mapPlaceholders);
-            RequestExecutor.sendGet(curlRequest);
+        HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+        String curlRequest = RequestGenerator.getById(mapPlaceholders);
+        RequestExecutor.sendGet(curlRequest);
     }
 
     @And("добавляем нового питомца")
     public void addNewPet(DataTable table) {
-            String jsonStr = FileUtil.readFile(Paths.JSON_PATH + File.separator + "AddNewPet.json");
-            HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
-            mapDefault.putAll(mapPlaceholders);
-            String jsonRequest = RequestGenerator.addNew(mapDefault);
-            Memory.put("request", jsonRequest);
-            Log.log("POST request body:" + "\n" + jsonRequest);
-            RequestExecutor.sendPost(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
+        String jsonStr = FileUtil.readFile(Paths.JSON_PATH + File.separator + "AddNewPet.json");
+        HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+        HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+        mapDefault.putAll(mapPlaceholders);
+        String jsonRequest = RequestGenerator.addNew(mapDefault);
+        Memory.put("request", jsonRequest);
+        Log.log("POST request body:" + "\n" + jsonRequest);
+        RequestExecutor.sendPost(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
     }
 
     @And("обновляем данные питомца и статус")
     public void updatePet(DataTable table) {
-            String jsonStr = FileUtil.readFile(Paths.JSON_PATH + File.separator + "UpdatePet.json");
-            HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
-            mapDefault.putAll(mapPlaceholders);
-            String jsonRequest = RequestGenerator.updRecord(mapDefault);
-            Memory.put("request", jsonRequest);
-            Log.log("PUT request body:" + "\n" + jsonRequest);
-            RequestExecutor.sendPut(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
+        String jsonStr = FileUtil.readFile(Paths.JSON_PATH + File.separator + "UpdatePet.json");
+        HashMap<String, String> mapDefault = JsonUtil.toHashMap(new JSONObject(jsonStr));
+        HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+        mapDefault.putAll(mapPlaceholders);
+        String jsonRequest = RequestGenerator.updRecord(mapDefault);
+        Memory.put("request", jsonRequest);
+        Log.log("PUT request body:" + "\n" + jsonRequest);
+        RequestExecutor.sendPut(Params.GET_ADD_UPD_DEL_ID_PATH, jsonRequest);
     }
 
     @And("удаляем данные питомца")
     public void deletePet(DataTable table) {
-            HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
-            String curlRequest = RequestGenerator.delById(mapPlaceholders);
-            RequestExecutor.sendDelete(curlRequest);
+        HashMap<String, String> mapPlaceholders = DataTableConvertor.toHashMap(table, "placeholder");
+        String curlRequest = RequestGenerator.delById(mapPlaceholders);
+        RequestExecutor.sendDelete(curlRequest);
     }
 
     @And("сравниваем запрос и ответ")
@@ -99,10 +96,27 @@ public class HttpSteps {
             if (!code.equals("200")) {
                 throw new HttpStepsException("You got response code other then 200.");
             }
-        } else if (respContent.equals("[]")) {    // возвращается в случае отсутствия данных при запросе по статусу/при вызове по несуществующему статусу
-            Log.log("Empty response.");      // не знаю как еще это обыграть. если указать exception, кейс FindPetByStatus будет всегда завершаться ошибкой при status = unknown
-        } else if (respContent.equals("null")) {  // возвращается в случае ошибки в пути curl
+        } else if (respContent.equals("[]")) {
+            Log.log("Empty response.");
+        } else if (respContent.equals("null")) {
         throw new HttpStepsException("Bad request.");
+        } else if (respContent.contains("status")) {
+            JSONArray jArray = new JSONArray(respContent);
+            for (int i = 0; i < jArray.length(); i++) {
+                JSONObject jObj = jArray.getJSONObject(i);
+                String stats = jObj.getString("status");
+                switch (stats) {
+                    case "available" -> {
+                        assert false : "Available pets status is absent";
+                    }
+                    case "pending" -> {
+                        assert false : "Pending pets status is absent";
+                    }
+                    case "sold" -> {
+                        assert false : "Sold pets status is absent";
+                    }
+                }
+            }
         }
     }
 

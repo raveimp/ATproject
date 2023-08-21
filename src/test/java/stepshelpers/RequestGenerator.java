@@ -11,7 +11,7 @@ public class RequestGenerator {
 
     public static String getByStatus(ArrayList<String> statusList) {
         String newRequest = Params.HTTP_PROTOCOL + "://" + Params.HTTP_HOST + Params.GET_STATUS_PATH + "?";
-        for(String currentStatus : statusList) {
+        for (String currentStatus : statusList) {
             newRequest += "status=" + currentStatus + "&";
         }
         newRequest = newRequest.substring(0, newRequest.length() - 1);
