@@ -23,6 +23,7 @@ public class HttpSteps {
     public void getPetsByStatus(String statuses) {
         String[] temp = statuses.split(", ");
         ArrayList<String> statusList = new ArrayList<>(Arrays.asList(temp));
+        Memory.put("status", String.valueOf(statusList));
         String curlRequest = RequestGenerator.getByStatus(statusList);
         RequestExecutor.sendGet(curlRequest);
     }
@@ -101,20 +102,13 @@ public class HttpSteps {
         } else if (respContent.equals("null")) {
         throw new HttpStepsException("Bad request.");
         } else if (respContent.contains("status")) {
+            String statusMemo = Memory.get("status");
             JSONArray jArray = new JSONArray(respContent);
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject jObj = jArray.getJSONObject(i);
                 String stats = jObj.getString("status");
-                switch (stats) {
-                    case "available" -> {
-                        assert false : "Available pets status is absent";
-                    }
-                    case "pending" -> {
-                        assert false : "Pending pets status is absent";
-                    }
-                    case "sold" -> {
-                        assert false : "Sold pets status is absent";
-                    }
+                if (!statusMemo.contains(stats)) {
+                    throw new HttpStepsException("Status " + stats + " is invalid!");
                 }
             }
         }
