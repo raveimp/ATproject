@@ -103,13 +103,11 @@ public class HttpSteps {
         throw new HttpStepsException("Bad request.");
         } else if (respContent.contains("status")) {
             String statusMemo = Memory.get("status");
-            JSONArray jArray = new JSONArray(respContent);
-            for (int i = 0; i < jArray.length(); i++) {
-                JSONObject jObj = jArray.getJSONObject(i);
-                String stats = jObj.getString("status");
-                if (!statusMemo.contains(stats)) {
-                    throw new HttpStepsException("Status " + stats + " is invalid!");
-                }
+            JSONArray respArray = new JSONArray(respContent);
+            for (int i = 0; i < respArray.length(); i++) {
+                JSONObject respObj = respArray.getJSONObject(i);
+                String stats = respObj.getString("status");
+                assert (!statusMemo.contains(stats)): ("Status " + stats + " is invalid!");
             }
         }
     }
