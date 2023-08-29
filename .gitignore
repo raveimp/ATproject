@@ -30,11 +30,9 @@ hs_err_pid*
 log
 
 # Gradle settings
-.gradle/
 
 # Specific folders of current project
 
 # Ignore Gradle project-specific cache directory
-.gradle
 
 # Ignore Gradle build output directory
