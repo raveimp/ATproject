@@ -1,1 +1,1 @@
-gradlew cucumber_local
+gradlew cucumber_local -P tags=@ALL
