@@ -1,0 +1,18 @@
+{
+  "id": "#{placeholder_id}",
+  "category": {
+    "id": 1,
+    "name": "crocodile"
+  },
+  "name": "Gena",
+  "photoUrls": [
+    "testUrl2"
+  ],
+  "tags": [
+    {
+      "id": 2,
+      "name": "Russia"
+    }
+  ],
+  "status": "#{placeholder_status}"
+}
